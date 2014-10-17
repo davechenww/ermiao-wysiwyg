@@ -34,8 +34,10 @@
   </div>
   <div class="jumbotron">
     <div class="summernote container">
-        <form role="form" action="." method="POST">{% csrf_token %}
+        <form role="form" action="." method="POST" enctype="multipart/form-data">{% csrf_token %}
         <div class="form-group">
+          <label for="title">Title</label>
+          <p><input type="text" name="title" id="id_title"></p>
           <label for="content">Content</label>
           <input type="hidden" id="text" name="text">
           <div class="form-control" id="summernote"></div>

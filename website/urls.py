@@ -19,4 +19,5 @@ urlpatterns = patterns(
     # url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', Index.as_view(), name='index'),
+    url(r'^detail/(?P<text_id>\w+)/', 'views.detail'),
 )
