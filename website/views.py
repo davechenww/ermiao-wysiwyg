@@ -10,6 +10,7 @@ from pymongo.objectid import ObjectId
 from forms import TextForm
 
 import models
+import utils
 
 class Index(View):
 
@@ -17,17 +18,19 @@ class Index(View):
         return render_to_response('index.html', {}, RequestContext(request))
 
     def post(self, request, *args, **kwargs):
-        print request.POST
-        print request.FILES
         form = TextForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             title = cd.get('title')
             text = cd.get('text')
+            image_list = utils.get_image(text)
             doc = {'title':title, 'text':text}
             text_id = str(models.insert(doc))
             return HttpResponseRedirect(reverse('views.detail', kwargs={'text_id': text_id}))
-        return render_to_response('index.html', {}, RequestContext(request))
+        text = u""
+        if not form['text'].errors:
+            text = form['text'].value 
+        return render_to_response('index.html', {'text':text}, RequestContext(request))
 
 def detail(request, text_id):
     text_id = ObjectId(text_id)

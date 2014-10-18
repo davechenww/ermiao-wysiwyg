@@ -54,7 +54,7 @@
     $(function() {
         $('#summernote').summernote({
             lang: 'zh-CN'
-        });
+        }).code(' {{ text|safe }}');
         $('form').submit(function(e) {
             $('#text').val($('#summernote').code());
             return;
