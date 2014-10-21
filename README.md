@@ -1,4 +1,4 @@
 ermiao-wysiwyg
 ==============
 
-A Wysiwyg editor test ground.
+A wysiwyg editor test ground.
