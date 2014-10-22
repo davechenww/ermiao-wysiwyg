@@ -34,7 +34,14 @@
   </div>
   <div class="jumbotron">
     <div class="summernote container">
-      <div id="summernote"></div>
+        <form role="form" action="." method="POST">{% csrf_token %}
+        <div class="form-group">
+          <label for="content">Content</label>
+          <input type="hidden" id="text" name="text">
+          <div class="form-control" id="summernote"></div>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
     </div>
   </div>
   <script src="{{ STATIC_URL }}j/jquery.min.js"></script>
@@ -45,6 +52,11 @@
     $(function() {
         $('#summernote').summernote({
             lang: 'zh-CN'
+        });
+        $('button[type="submit"]').click(function (e) {
+            e.preventDefault();
+            $('#text').val($('#summernote').code());
+            $('form').submit();
         });
     });
   </script>
