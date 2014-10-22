@@ -53,10 +53,9 @@
         $('#summernote').summernote({
             lang: 'zh-CN'
         });
-        $('button[type="submit"]').click(function (e) {
-            e.preventDefault();
+        $('form').submit(function(e) {
             $('#text').val($('#summernote').code());
-            $('form').submit();
+            return;
         });
     });
   </script>

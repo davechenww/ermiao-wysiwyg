@@ -8,3 +8,7 @@ class Index(View):
 
     def get(self, request, *args, **kwargs):
         return render_to_response('index.html', {}, RequestContext(request))
+
+    def post(self, request, *args, **kwargs):
+        print request.POST
+        return render_to_response('index.html', {}, RequestContext(request))
