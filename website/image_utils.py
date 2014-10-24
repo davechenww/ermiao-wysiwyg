@@ -1,8 +1,10 @@
 # -*- coding:utf-8 -*-
 import uuid
 import os
-import settings
-    
+
+from django.conf import settings
+
+
 def save(uploadfile):
     random_name = '%s.png' % uuid.uuid4().hex
 
@@ -13,5 +15,4 @@ def save(uploadfile):
     dest.close()
 
     url = os.path.join(settings.MEDIA_URL, 'uploads', random_name)
-    return url 
-        
+    return url
