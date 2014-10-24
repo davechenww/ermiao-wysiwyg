@@ -37,12 +37,19 @@
         <form role="form" action="." method="POST" enctype="multipart/form-data">{% csrf_token %}
         <div class="form-group">
           <label for="title">Title</label>
+          {{ form.title.errors }}
           <p><input type="text" name="title" id="id_title"></p>
           <label for="content">Content</label>
           <input type="hidden" id="text" name="text">
+          {{ form.text.errors }}
           <div class="form-control" id="summernote"></div>
+          <button id="show-image-list" type="button" class="btn btn-default">选择题图</button>
+          <div class="image-show">
+              <ul id="image-list">
+              </ul>
+          </div>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
+        <button id="form-submit" type="submit" class="btn btn-default">Submit</button>
       </form>
     </div>
   </div>
@@ -59,10 +66,17 @@
                 sendFile(files[0],editor,welEditable);
             }
         }).code(' {{ text|safe }}');
+
+        $('#show-image-list').on('click', function() {
+            $('#image-list img').remove();
+            $('div.note-editable img').clone().removeAttr('style').attr({width:"70", height:"70"}).appendTo('#image-list');
+        });
+
         $('form').submit(function(e) {
             $('#text').val($('#summernote').code());
             return;
         });
+    
 
     function sendFile(file,editor,welEditable) {
         var data = new FormData();

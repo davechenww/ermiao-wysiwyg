@@ -30,10 +30,11 @@ class Index(View):
             text_id = str(models.insert(doc))
             return HttpResponseRedirect(reverse('views.detail', kwargs={'text_id': text_id}))
 
+        
         text = u""
         if not form['text'].errors:
             text = form['text'].value 
-        return render_to_response('index.html', {'text':text}, RequestContext(request))
+        return render_to_response('index.html', {'form':form, 'text':text}, RequestContext(request))
 
 def detail(request, text_id):
     text_id = ObjectId(text_id)
