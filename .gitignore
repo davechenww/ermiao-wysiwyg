@@ -1,7 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.swp
 
 # C extensions
 *.so
@@ -53,3 +52,14 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+# project related
+uploads/
