@@ -4,76 +4,10 @@
 Ermiao WYSIWYG Editor
 {% endblock %}
 
-{% block css %}
-<link href="{{ STATIC_URL }}fa/css/font-awesome.min.css" rel="stylesheet">
-<link href="{{ STATIC_URL }}sn/summernote.css" rel="stylesheet">
-{% endblock %}
-
 {% block content %}
-<div class="summernote well">
-  <form role="form" action="." method="POST" enctype="multipart/form-data">{% csrf_token %}
-    <div class="form-group">
-      <label for="title">Title</label>
-      {{ form.title.errors }}
-      <p><input type="text" name="title" id="id_title"></p>
-      <label for="content">Content</label>
-      <input type="hidden" id="text" name="text">
-      {{ form.text.errors }}
-      <div class="form-control" id="summernote"></div>
-      <button id="show-image-list" type="button" class="btn btn-default">选择题图</button>
-      <div class="image-show">
-        <ul id="image-list"></ul>
-      </div>
-    </div>
-    <button id="form-submit" type="submit" class="btn btn-default">Submit</button>
-  </form>
-</div>
-{% endblock %}
-
-{% block js %}
-<script src="{{ STATIC_URL }}sn/summernote.min.js"></script>
-<script src="{{ STATIC_URL }}sn/summernote-zh-CN.js"></script>
-<script type="text/javascript">
-    $(function() {
-        $('#summernote').summernote({
-            lang: 'zh-CN',
-            height: "300px",
-            onImageUpload: function(files, editor, welEditable) {
-                sendFile(files[0], editor, welEditable);
-            }
-        }).code('{{ text|safe }}');
-
-        $('#show-image-list').on('click', function() {
-            $('#image-list input').remove()
-            $('#image-list img').remove();
-            $('div.note-editable img').clone().removeAttr('style').attr({width: "70", height: "70"}).appendTo('#image-list');
-            $('#image-list img').each(function(index, element) {
-                var src = $(element).attr('src');
-                var radio = '<input type="radio" name="main_image" value="' + src + '">';
-                $(radio).insertBefore($(element))
-            })
-        });
-
-        $('form').submit(function(e) {
-            $('#text').val($('#summernote').code());
-            return;
-        });
-
-        function sendFile(file, editor, welEditable) {
-            var data = new FormData();
-            data.append("file", file);
-            $.ajax({
-                data: data,
-                type: "POST",
-                url: "{% url upload %}",
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(url) {
-                    editor.insertImage(welEditable, url);
-                }
-            });
-        }
-    });
-</script>
+<ul>
+{% for entry in entries %}
+<li><a href="{% url detail entry.id %}"><h3>{{ entry.title }}</h3></a></li>
+{% endfor %}
+</ul>
 {% endblock %}

@@ -1,29 +1,48 @@
 # -*- coding:utf-8 -*-
-
-from pymongo import Connection
+from pymongo.objectid import ObjectId
 
 import db
 
-db = db.get_db()
-texts = db['texts']    #texts is a collection name
 
-def insert(doc):
-    return texts.insert(doc)
+class Entry(object):
+    _db = db.get_db()['texts']
 
-def delete(text_id):
-    return texts.remove({'_id': text_id})
+    def __init__(self, title, text, cover=''):
+        self.title = title
+        self.text = text
+        self.cover = cover
 
-def get_text(text_id):
-    doc = texts.find_one({'_id': text_id})
-    text = doc['text']
-    return text
+    @classmethod
+    def create(cls, title, text, cover=''):
+        obj = Entry(title, text, cover)
+        doc = {'title': title, 'text': text}
+        if cover:
+            doc['cover'] = cover
+        obj.id = cls._db.insert(doc)
+        return obj
 
-def get_title(text_id):
-    doc = texts.find_one({'_id': text_id})
-    title = doc['title']
-    return title
+    @classmethod
+    def delete(cls, _id):
+        return cls._db.remove({'_id': ObjectId(_id)})
 
-def get_main_image(text_id):
-    doc = texts.find_one({'_id': text_id})
-    main_image = doc['main_image']
-    return main_image 
+    @classmethod
+    def get(cls, _id):
+        doc = cls._db.find_one({'_id': ObjectId(_id)})
+        obj = None
+        if doc:
+            _id = doc.pop('_id')
+            obj = Entry(**doc)
+            obj.id = _id
+        return obj
+
+    @classmethod
+    def get_list(cls, limit=10, page=0):
+        skip = limit * page
+        docs = cls._db.find({}, limit=limit, skip=skip)
+        objs = []
+        for doc in docs:
+            _id = doc.pop('_id')
+            obj = Entry(**doc)
+            obj.id = _id
+            objs.append(obj)
+        return objs

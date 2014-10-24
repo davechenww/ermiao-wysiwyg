@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
-from website.views import Index
+from website.views import Index, Create, Detail, Upload
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -20,8 +20,9 @@ urlpatterns = patterns(
     # url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', Index.as_view(), name='index'),
-    url(r'^detail/(?P<text_id>\w+)/$', 'views.detail', name='detail'),
-    url(r'^upload/$', 'views.upload', name='upload'),
+    url(r'^create/$', Create.as_view(), name='create'),
+    url(r'^detail/(?P<_id>\w+)/$', Detail.as_view(), name='detail'),
+    url(r'^upload/$', Upload.as_view(), name='upload'),
 )
 
 if settings.DEBUG:
