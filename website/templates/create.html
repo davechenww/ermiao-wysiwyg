@@ -11,13 +11,19 @@ Ermiao WYSIWYG Editor
 {% block content %}
 <div class="summernote well">
   <form role="form" action="." method="POST" enctype="multipart/form-data">{% csrf_token %}
-    <div class="form-group">
-      <label for="title">Title</label>
+    <div class="form-group{% if form.title.errors %} has-error{% endif %}">
+      <label class="control-label" for="title">Title</label>
+      {% if form.title.errors %}
+      <span class="help-block">{{ form.title.errors|join:"<br />" }}</span>
+      {% endif %}
       <input class="form-control" type="text" name="title" id="id_title" value="{{ form.title.value|default:'' }}">
       {{ form.title.errors }}
     </div>
-    <div class="form-group">
-      <label for="content">Content</label>
+    <div class="form-group{% if form.text.errors %} has-error{% endif %}">
+      <label class="control-label" for="content">Content</label>
+      {% if form.text.errors %}
+      <span class="help-block">{{ form.text.errors|join:"<br />" }}</span>
+      {% endif %}
       <input type="hidden" id="text" name="text">
       {{ form.text.errors }}
       <div class="form-control" id="summernote"></div>
