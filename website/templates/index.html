@@ -53,12 +53,32 @@
   <script type="text/javascript">
     $(function() {
         $('#summernote').summernote({
-            lang: 'zh-CN'
+            lang: 'zh-CN',
+            height: "500px",
+            onImageUpload: function(files, editor, welEditable) {
+                sendFile(files[0],editor,welEditable);
+            }
         }).code(' {{ text|safe }}');
         $('form').submit(function(e) {
             $('#text').val($('#summernote').code());
             return;
         });
+
+    function sendFile(file,editor,welEditable) {
+        var data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: "/upload/",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(url) {
+                    editor.insertImage(welEditable, url);
+            }
+        });
+    }
     });
   </script>
   </body>

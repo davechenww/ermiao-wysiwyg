@@ -17,3 +17,8 @@ def get_text(text_id):
     doc = texts.find_one({'_id': text_id})
     text = doc['text']
     return text
+
+def get_title(text_id):
+    doc = texts.find_one({'_id': text_id})
+    title = doc['title']
+    return title

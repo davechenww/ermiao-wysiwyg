@@ -1,17 +1,10 @@
 from django.conf.urls.defaults import patterns, include, url
 
 from website.views import Index
-
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+import settings
 
 urlpatterns = patterns(
     '',
-    # Examples:
-    # url(r'^$', 'website.views.home', name='home'),
-    # url(r'^website/', include('website.foo.urls')),
-
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
@@ -19,5 +12,13 @@ urlpatterns = patterns(
     # url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', Index.as_view(), name='index'),
-    url(r'^detail/(?P<text_id>\w+)/', 'views.detail'),
+    url(r'^detail/(?P<text_id>\w+)/$', 'views.detail'),
+    url(r'^upload/$', 'views.upload'),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns("",
+        url(r'^media/(?P<path>.*)$',
+            'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT,}),
+    )
