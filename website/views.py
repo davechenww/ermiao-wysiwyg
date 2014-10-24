@@ -6,9 +6,10 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
+from django.conf import settings
+
 from forms import TextForm
 from models import Entry
-import image_utils
 
 
 class Index(View):
@@ -69,5 +70,18 @@ class Upload(View):
 
     def post(self, request, *args, **kwargs):
         image = request.FILES['file']
-        url = image_utils.save(image)
+        url = self.save(image)
         return HttpResponse(url)
+
+    def save(self, uploadfile):
+        import os.path, uuid
+        ext = os.path.splitext(uploadfile.name)[1]
+        filename = os.path.join('uploads', '%s%s' % (uuid.uuid4().hex, ext))
+
+        uri = os.path.join(settings.MEDIA_ROOT, filename)
+        with open(uri, 'wb+') as dest:
+            for chunk in uploadfile.chunks():
+                dest.write(chunk)
+
+        from urlparse import urljoin
+        return urljoin(settings.MEDIA_URL, filename)
