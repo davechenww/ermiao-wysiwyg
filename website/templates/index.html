@@ -1,77 +1,53 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-  <head>
-    <meta charset="utf-8">
-    <title>Ermiao WYSIWYG Editor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <!--[if lt IE 9]>
-      <script src="{{ STATIC_URL }}j/html5shiv.js"></script>
-    <![endif]-->
-    <link href="{{ STATIC_URL }}bs/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}fa/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}sn/summernote.css" rel="stylesheet">
-  </head>
-  <body>
-  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">导航</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/"><i class="fa fa-sun-o"></i>WYSIWYG</a>
-      </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="/">首页</a></li>
-        </ul>
+{% extends "base.html" %}
+
+{% block title %}
+Ermiao WYSIWYG Editor
+{% endblock %}
+
+{% block css %}
+<link href="{{ STATIC_URL }}fa/css/font-awesome.min.css" rel="stylesheet">
+<link href="{{ STATIC_URL }}sn/summernote.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="summernote well">
+  <form role="form" action="." method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <div class="form-group">
+      <label for="title">Title</label>
+      {{ form.title.errors }}
+      <p><input type="text" name="title" id="id_title"></p>
+      <label for="content">Content</label>
+      <input type="hidden" id="text" name="text">
+      {{ form.text.errors }}
+      <div class="form-control" id="summernote"></div>
+      <button id="show-image-list" type="button" class="btn btn-default">选择题图</button>
+      <div class="image-show">
+        <ul id="image-list"></ul>
       </div>
     </div>
-  </div>
-  <div class="jumbotron">
-    <div class="summernote container">
-        <form role="form" action="." method="POST" enctype="multipart/form-data">{% csrf_token %}
-        <div class="form-group">
-          <label for="title">Title</label>
-          {{ form.title.errors }}
-          <p><input type="text" name="title" id="id_title"></p>
-          <label for="content">Content</label>
-          <input type="hidden" id="text" name="text">
-          {{ form.text.errors }}
-          <div class="form-control" id="summernote"></div>
-          <button id="show-image-list" type="button" class="btn btn-default">选择题图</button>
-          <div class="image-show">
-              <ul id="image-list">
-              </ul>
-          </div>
-        </div>
-        <button id="form-submit" type="submit" class="btn btn-default">Submit</button>
-      </form>
-    </div>
-  </div>
-  <script src="{{ STATIC_URL }}j/jquery.min.js"></script>
-  <script src="{{ STATIC_URL }}bs/js/bootstrap.min.js"></script>
-  <script src="{{ STATIC_URL }}sn/summernote.min.js"></script>
-  <script src="{{ STATIC_URL }}sn/summernote-zh-CN.js"></script>
-  <script type="text/javascript">
+    <button id="form-submit" type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ STATIC_URL }}sn/summernote.min.js"></script>
+<script src="{{ STATIC_URL }}sn/summernote-zh-CN.js"></script>
+<script type="text/javascript">
     $(function() {
         $('#summernote').summernote({
             lang: 'zh-CN',
             height: "300px",
             onImageUpload: function(files, editor, welEditable) {
-                sendFile(files[0],editor,welEditable);
+                sendFile(files[0], editor, welEditable);
             }
-        }).code(' {{ text|safe }}');
+        }).code('{{ text|safe }}');
 
         $('#show-image-list').on('click', function() {
             $('#image-list input').remove()
             $('#image-list img').remove();
-            $('div.note-editable img').clone().removeAttr('style').attr({width:"70", height:"70"}).appendTo('#image-list');
-            $('#image-list img').each(function (index, element) {
+            $('div.note-editable img').clone().removeAttr('style').attr({width: "70", height: "70"}).appendTo('#image-list');
+            $('#image-list img').each(function(index, element) {
                 var src = $(element).attr('src');
                 var radio = '<input type="radio" name="main_image" value="' + src + '">';
                 $(radio).insertBefore($(element))
@@ -82,24 +58,22 @@
             $('#text').val($('#summernote').code());
             return;
         });
-    
 
-    function sendFile(file,editor,welEditable) {
-        var data = new FormData();
-        data.append("file", file);
-        $.ajax({
-            data: data,
-            type: "POST",
-            url: "/upload/",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(url) {
+        function sendFile(file, editor, welEditable) {
+            var data = new FormData();
+            data.append("file", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{% url upload %}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(url) {
                     editor.insertImage(welEditable, url);
-            }
-        });
-    }
+                }
+            });
+        }
     });
-  </script>
-  </body>
-</html>
+</script>
+{% endblock %}

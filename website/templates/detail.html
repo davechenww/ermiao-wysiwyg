@@ -1,7 +1,13 @@
-<h1> {{ title }} </h1>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ title }}</h1>
+</div>
 {% if main_image %}
-    <h2> 题图 </h2>
-    <img src="{{ main_image }}">
+<h2> 题图 </h2>
+<img src="{{ main_image }}">
 {% endif %}
 <h2> 文章 </h2>
-{{ text|safe }}
+<div>{{ text|safe }}</div>
+{% endblock %}
