@@ -5,9 +5,11 @@ Ermiao WYSIWYG Editor
 {% endblock %}
 
 {% block content %}
-<ul>
 {% for entry in entries %}
-<li><a href="{% url detail entry.id %}"><h3>{{ entry.title }}</h3></a></li>
+<div class="row">
+    <h3 class="col-xs-12 col-md-8"><a href="{% url detail entry.id %}">{{ entry.title }}</a></h3>
+    {% if entry.cover %}<div class="col-md-2"><img src="{{ entry.cover }}"></div>{% endif %}
+</div>
+<hr>
 {% endfor %}
-</ul>
 {% endblock %}

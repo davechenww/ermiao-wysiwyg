@@ -12,8 +12,5 @@
 <div class="page-header">
   <h1>{{ entry.title }}</h1>
 </div>
-{% if entry.cover %}
-<p><img src="{{ entry.cover }}"></p>
-{% endif %}
 <div>{{ entry.text|safe }}</div>
 {% endblock %}

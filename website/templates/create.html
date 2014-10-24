@@ -65,7 +65,7 @@ Ermiao WYSIWYG Editor
             $('div.note-editable img').clone().removeAttr('style').attr({width: "70", height: "70"}).appendTo('#image-list');
             $('#image-list img').each(function(index, element) {
                 var src = $(element).attr('src');
-                var radio = '<input type="radio" name="main_image" value="' + src + '">';
+                var radio = '<input type="radio" name="cover" value="' + src + '">';
                 $(radio).insertBefore($(element))
             })
         });
