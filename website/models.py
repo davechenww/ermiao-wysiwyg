@@ -22,3 +22,8 @@ def get_title(text_id):
     doc = texts.find_one({'_id': text_id})
     title = doc['title']
     return title
+
+def get_main_image(text_id):
+    doc = texts.find_one({'_id': text_id})
+    main_image = doc['main_image']
+    return main_image 

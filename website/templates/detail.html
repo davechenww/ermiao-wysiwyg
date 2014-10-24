@@ -1,2 +1,7 @@
 <h1> {{ title }} </h1>
+{% if main_image %}
+    <h2> 题图 </h2>
+    <img src="{{ main_image }}">
+{% endif %}
+<h2> 文章 </h2>
 {{ text|safe }}

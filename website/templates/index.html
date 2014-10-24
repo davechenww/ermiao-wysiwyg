@@ -61,15 +61,21 @@
     $(function() {
         $('#summernote').summernote({
             lang: 'zh-CN',
-            height: "500px",
+            height: "300px",
             onImageUpload: function(files, editor, welEditable) {
                 sendFile(files[0],editor,welEditable);
             }
         }).code(' {{ text|safe }}');
 
         $('#show-image-list').on('click', function() {
+            $('#image-list input').remove()
             $('#image-list img').remove();
             $('div.note-editable img').clone().removeAttr('style').attr({width:"70", height:"70"}).appendTo('#image-list');
+            $('#image-list img').each(function (index, element) {
+                var src = $(element).attr('src');
+                var radio = '<input type="radio" name="main_image" value="' + src + '">';
+                $(radio).insertBefore($(element))
+            })
         });
 
         $('form').submit(function(e) {

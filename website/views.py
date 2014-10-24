@@ -26,7 +26,15 @@ class Index(View):
             cd = form.cleaned_data
             title = cd.get('title')
             text = cd.get('text')
-            doc = {'title':title, 'text':text}
+            main_image = cd.get('main_image', '')
+            doc = {}
+            if main_image:
+                doc = {
+                    'title' : title,
+                    'text' : text,
+                    'main_image' : main_image } 
+            else:
+                doc = {'title':title, 'text':text}
             text_id = str(models.insert(doc))
             return HttpResponseRedirect(reverse('views.detail', kwargs={'text_id': text_id}))
 
@@ -40,12 +48,18 @@ def detail(request, text_id):
     text_id = ObjectId(text_id)
     text = models.get_text(text_id)
     title = models.get_title(text_id)
-    return render_to_response('detail.html', {'text':text, 'title':title})
+    try:
+        main_image = models.get_main_image(text_id)
+    except:
+        main_image = False
+    return render_to_response('detail.html', {
+        'text' : text, 
+        'title' : title,
+        'main_image' : main_image })
 
 @csrf_exempt
 def upload(request):
     if request.method == "POST":
         image = request.FILES['file'] 
         image_uri = image_utils.save(image)
-        models.insert({'image_uri':image_uri})
         return HttpResponse(image_uri) 
